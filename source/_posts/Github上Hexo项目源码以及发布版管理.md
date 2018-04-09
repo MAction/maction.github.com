@@ -53,33 +53,52 @@ git config --global user.email "username@example.com"
 1. 在 GitHub 上创建 shiningdan.github.io 代码仓库
 2. 本地下载和安装 git、node.js，并且使用 git config 配置本地 git 账号
 3. 在本地合适的位置创建 shiningdan.github.io 文件夹，作为本地博客根目录
-4. 在本地 shiningdan.github.io 依次执行：`
+4. 在本地 shiningdan.github.io 依次执行：
+
+```
 npm install -g hexo
 hexo init
 npm install
 npm install hexo-deployer-git
-`
-5. 使用 GitHub 提示，将本地文件夹与远程代码仓库连接：`
+```
+5. 使用 GitHub 提示，将本地文件夹与远程代码仓库连接：
+
+```
 echo "# shiningdan.github.io" >> README.md
 git init
 git add README.md
 git commit -m "first commit"
 git remote add origin https://github.com/ShiningDan/shiningdan.github.io.git
 git push -u origin master
-`
-6. 创建 master 和 hexo 分支。因为创建的代码仓库是 User Page，所以 master 分支是作为 hexo deploy 的分支，而 hexo 分支是保存源代码的分支。在 terminal 下执行命令：`
+```
+6. 创建 master 和 hexo 分支。因为创建的代码仓库是 User Page，所以 master 分支是作为 hexo deploy 的分支，而 hexo 分支是保存源代码的分支。在 terminal 下执行命令：
+
+```
 git branch hexo //创建 hexo 分支
 git push origin hexo //将本地分支 PUSH 到远端
 git checkout hexo //切换本地分支为 hexo
-`
-7. 修改_config.yml中的deploy参数，修改 deploy `type:git`、`repo:https://github.com/ShiningDan/shiningdan.github.io.git`、`branch: master`。注意，branch 一定要为 master，因为 User Page 的发布版必须位于 master 分支下。
+```
+7. 修改_config.yml中的deploy参数，注意，branch 一定要为 master，因为 User Page 的发布版必须位于 master 分支下。 
+
+```YAML
+deploy: 
+  type: git
+  repo: git@github.com:ShiningDan/shiningdan.github.io.git
+  branch: master
+```
 8. 修改 GitHub 网页中的配置，将 hexo 分支设置为默认分支。
-9. 依次执行`git add .`、`git commit -m “…”`、`git push origin hexo`提交网站相关的文件
+9. 依次执行，提交网站相关的文件
+```
+git add .
+git commit -m "…"
+git push origin hexo
+
+```
 10. 执行`hexo generate -d`生成网站并部署到GitHub上
 
 ### 日常发布以及备份
 
-在备份源代码和源文件的时候，依次执行`git add .`、`git commit -m “…”`、`git push origin hexo`指令将改动推送到GitHub，此时源代码和源文件是被备份在 hexo 分支上。
+在备份源代码和源文件的时候，依次执行`git add .`、`git commit -m "…"`、`git push origin hexo`指令将改动推送到GitHub，此时源代码和源文件是被备份在 hexo 分支上。
 
 再执行`hexo generate -d`发布网站到master分支上
 
