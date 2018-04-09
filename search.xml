@@ -5,4 +5,24 @@
     <url>%2F2018%2F04%2F08%2Fhello-world%2F</url>
     <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
   </entry>
+  <entry>
+    <title><![CDATA[【转】使用Travis CI自动部署到Github pages上]]></title>
+    <url>%2F2017%2F10%2F26%2F%E4%BD%BF%E7%94%A8Travis%20CI%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%88%B0Github%20pages%E4%B8%8A%2F</url>
+    <content type="text"><![CDATA[什么是Travis CI Travis CI 是目前新兴的开源持续集成构建项目，它与jenkins，GO的很明显的特别在于采用yaml格式，同时他是在在线的服务，不像jenkins需要你本地打架服务器，简洁清新独树一帜。目前大多数的github项目都已经移入到Travis CI的构建队列中，据说Travis CI每天运行超过4000次完整构建。对于做开源项目或者github的使用者，如果你的项目还没有加入Travis CI构建队列，那么我真的想对你说out了。 然后根据大佬们的文章 使用 Travis CI 自动更新 GitHub Pages 以及 手把手教你使用Travis CI自动部署你的Hexo博客到Github上 就完成了小博客的自动提交部署了。 我的yml设置文件 参考这里.travis.yml 注意的是在这里Online YAML Parser可以验证你的yml 文件的正确性。 转载自marzlia]]></content>
+      <tags>
+        <tag>Travis CI</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[【转】Github上Hexo项目源码以及发布版管理]]></title>
+    <url>%2F2017%2F01%2F10%2FGithub%E4%B8%8AHexo%E9%A1%B9%E7%9B%AE%E6%BA%90%E7%A0%81%E4%BB%A5%E5%8F%8A%E5%8F%91%E5%B8%83%E7%89%88%E7%AE%A1%E7%90%86%2F</url>
+    <content type="text"><![CDATA[前言在原来的电脑中，我的 hexo 备份在 GitHub上，除了一个 User Page 用来发布文章以外，还有一个 hexo-backup 的仓库，用来保存 hexo 的源代码。 在我换电脑以后，需要在新的电脑上重新部署 hexo 的环境，由于原来 hexo 的源代码及文稿与发布的仓库位于两个不同的仓库中，导致我需要下载一个仓库，但是要 hexo deploy 到另一个仓库中，这是一个很不合理的项目规划方案。所以，在网上搜索了一些教程以后，我重新规划了 GitHub 上面的代码仓库，用一个仓库同时存放 hexo 项目的发布版和源文件，但是这两个部分位于一个仓库的不同分支中。在以后需要重新部署 hexo 环境的时候，只用从一个仓库中下载代码，就可以获得源代码和发布版。 感谢CrazyMilk的文章，为我提供了使用一个仓库同时管理发布版和源代码的解决方案！ 环境配置创建 GitHub 仓库首先点击 New Repository，创建一个新的代码仓库，在填写 Repository name 的时候，格式是 username.github.io (username 是你的 GitHub 账号用户名)。 本地安装环境配置需要下载的软件有 Git、node.js 和 Hexo ，下载及安装方法不再赘述。 注意，在配置 Git 的时候，最好使用 git config 进行配置，这与 GitHub 在计算 contributions 次数的有关，也是就 GitHub 个人首页上绿色小点，用来统计每个人每天 commit 的次数有关。 在 GitHub 上统计代码仓库 commit 的次数时候，需要同时满足以下三点，才可以记为一次 commit： The email address used for the commits is associated with your GitHub account. The commits were made in a standalone repository, not a fork. The commits were made: In the repository’s default branch (usually master) In the gh-pages branch (for repositories with Project Pages sites) 也就是你的本地 Git 账号需要和 GitHub 账号一致。所以需要通过 git config 来配置本地 Git 的账号： 12git config --global user.name &quot;username&quot;git config --global user.email &quot;username@example.com&quot; 本地博客搭建流程本流程与CrazyMilk的文章中的流程有所不同，如果是按照他的流程，在 hexo init 的时候，会删除本地的 .git 文件夹，所在流程上会略有不同。 以我的博客搭建流程为例： 在 GitHub 上创建 shiningdan.github.io 代码仓库 本地下载和安装 git、node.js，并且使用 git config 配置本地 git 账号 在本地合适的位置创建 shiningdan.github.io 文件夹，作为本地博客根目录 在本地 shiningdan.github.io 依次执行：npm install -g hexo hexo init npm install npm install hexo-deployer-git 使用 GitHub 提示，将本地文件夹与远程代码仓库连接：echo &quot;# shiningdan.github.io&quot; &gt;&gt; README.md git init git add README.md git commit -m &quot;first commit&quot; git remote add origin https://github.com/ShiningDan/shiningdan.github.io.git git push -u origin master 创建 master 和 hexo 分支。因为创建的代码仓库是 User Page，所以 master 分支是作为 hexo deploy 的分支，而 hexo 分支是保存源代码的分支。在 terminal 下执行命令：git branch hexo //创建 hexo 分支 git push origin hexo //将本地分支 PUSH 到远端 git checkout hexo //切换本地分支为 hexo 修改_config.yml中的deploy参数，修改 deploy type:git、repo:https://github.com/ShiningDan/shiningdan.github.io.git、branch: master。注意，branch 一定要为 master，因为 User Page 的发布版必须位于 master 分支下。 修改 GitHub 网页中的配置，将 hexo 分支设置为默认分支。 依次执行git add .、git commit -m “…”、git push origin hexo提交网站相关的文件 执行hexo generate -d生成网站并部署到GitHub上 日常发布以及备份在备份源代码和源文件的时候，依次执行git add .、git commit -m “…”、git push origin hexo指令将改动推送到GitHub，此时源代码和源文件是被备份在 hexo 分支上。 再执行hexo generate -d发布网站到master分支上 重新部署 使用git clone https://github.com/ShiningDan/shiningdan.github.io.git拷贝仓库（默认分支为hexo） 在本地新拷贝的shiningdan.github.io文件夹下通过Git bash依次执行下列指令：npm install -g hexo、npm install、npm install hexo-deployer-git（记得，不需要hexo init这条指令） 转载自shiningdan]]></content>
+      <categories>
+        <category>coding</category>
+      </categories>
+      <tags>
+        <tag>GitHub</tag>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
 </search>
